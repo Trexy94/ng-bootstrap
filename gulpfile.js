@@ -76,7 +76,7 @@ gulp.task('umd', function(cb) {
 
   webpack(
       {
-        entry: './temp/index.js',
+        entry: './dist/index.js',
         output: {filename: 'dist/bundles/ng-bootstrap.js', library: 'ngb', libraryTarget: 'umd'},
         devtool: 'source-map',
         externals: [
