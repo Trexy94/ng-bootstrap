@@ -43,8 +43,8 @@ const NGB_DATEPICKER_VALIDATOR = {
  * Manages integration with the input field itself (data entry) and ngModel (validation etc.).
  */
 @Directive({
-  selector: 'input[ngbDatepicker]',
-  exportAs: 'ngbDatepicker',
+  selector: 'input[data-ngbDatepicker]',
+  exportAs: 'data-ngbDatepicker',
   host: {'(change)': 'manualDateChange($event.target.value)', '(keyup.esc)': 'close()', '(blur)': 'onBlur()'},
   providers: [NGB_DATEPICKER_VALUE_ACCESSOR, NGB_DATEPICKER_VALIDATOR, NgbDatepickerService]
 })
