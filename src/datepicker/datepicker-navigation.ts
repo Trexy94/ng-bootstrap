@@ -43,7 +43,7 @@ import {NgbCalendar} from './ngb-calendar';
     }    
   `],
   template: `
-    <button type="button" class="btn-link" (click)="!!doNavigate(navigation.PREV)" [disabled]="prevDisabled()">
+    <button title="mese precedente" type="button" class="btn-link" (click)="!!doNavigate(navigation.PREV)" [disabled]="prevDisabled()">
       <span class="ngb-dp-navigation-chevron"></span>    
     </button>
     
@@ -55,7 +55,7 @@ import {NgbCalendar} from './ngb-calendar';
       (select)="selectDate($event)">
     </ngb-datepicker-navigation-select>
     
-    <button type="button" class="btn-link" (click)="!!doNavigate(navigation.NEXT)" [disabled]="nextDisabled()">
+    <button title="mese successivo" type="button" class="btn-link" (click)="!!doNavigate(navigation.NEXT)" [disabled]="nextDisabled()">
       <span class="ngb-dp-navigation-chevron right"></span>
     </button>
   `
