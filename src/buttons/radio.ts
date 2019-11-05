@@ -12,7 +12,7 @@ const NGB_RADIO_VALUE_ACCESSOR = {
  * specified via ngModel.
  */
 @Directive({
-  selector: '[ngbRadioGroup]',
+  selector: '[data-ngbRadioGroup]',
   host: {'data-toggle': 'buttons', 'class': 'btn-group', 'role': 'group'},
   providers: [NGB_RADIO_VALUE_ACCESSOR]
 })
