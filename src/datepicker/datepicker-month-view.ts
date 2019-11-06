@@ -32,7 +32,7 @@ import {DayTemplateContext} from './datepicker-day-template-context';
     <template ngFor let-week [ngForOf]="month.weeks">
       <div *ngIf="!isCollapsed(week)" class="ngb-dp-week d-flex">
         <div *ngIf="showWeekNumbers" class="ngb-dp-week-number small text-center font-italic text-muted">{{ week.number }}</div>
-        <div *ngFor="let day of week.days" (click)="doSelect(day)" tabindex="0" (keyup.enter)="doSelect(day)" class="ngb-dp-day"
+        <div *ngFor="let day of week.days" (click)="doSelect(day)" tabindex="0" role="button" (keyup.enter)="doSelect(day)" class="ngb-dp-day"
          [class.disabled]="isDisabled(day)"
          [class.hidden]="isHidden(day)">
           <template [ngIf]="!isHidden(day)">
