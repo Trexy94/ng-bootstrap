@@ -9,12 +9,14 @@ import {
   TemplateRef
 } from '@angular/core';
 
-import {ContentRef} from '../util/popup';
-import {isDefined, isString} from '../util/util';
+import { ContentRef } from '../util/popup';
+import { isDefined, isString } from '../util/util';
 
-import {NgbModalBackdrop} from './modal-backdrop';
-import {NgbModalWindow} from './modal-window';
-import {NgbActiveModal, NgbModalRef} from './modal-ref';
+import { NgbModalBackdrop } from './modal-backdrop';
+import { NgbModalWindow } from './modal-window';
+import { NgbActiveModal, NgbModalRef } from './modal-ref';
+
+declare var focusTrap;
 
 @Injectable()
 export class NgbModalStack {
@@ -22,8 +24,8 @@ export class NgbModalStack {
   private _windowFactory: ComponentFactory<NgbModalWindow>;
 
   constructor(
-      private _applicationRef: ApplicationRef, private _injector: Injector,
-      private _componentFactoryResolver: ComponentFactoryResolver) {
+    private _applicationRef: ApplicationRef, private _injector: Injector,
+    private _componentFactoryResolver: ComponentFactoryResolver) {
     this._backdropFactory = _componentFactoryResolver.resolveComponentFactory(NgbModalBackdrop);
     this._windowFactory = _componentFactoryResolver.resolveComponentFactory(NgbModalWindow);
   }
@@ -55,8 +57,24 @@ export class NgbModalStack {
 
     ngbModalRef = new NgbModalRef(windowCmptRef, contentRef, backdropCmptRef);
 
-    activeModal.close = (result: any) => { ngbModalRef.close(result); };
-    activeModal.dismiss = (reason: any) => { ngbModalRef.dismiss(reason); };
+    let focusTrapReference: any;
+    if (focusTrap) {
+      focusTrapReference = focusTrap(windowCmptRef.location.nativeElement, { escapeDeactivates: false, clickOutsideDeactivates: true });
+      focusTrapReference.activate();
+    }
+
+    activeModal.close = (result: any) => {
+      ngbModalRef.close(result);
+      if (focusTrap) {
+        focusTrapReference.deactivate();
+      }
+    };
+    activeModal.dismiss = (reason: any) => {
+      ngbModalRef.dismiss(reason);
+      if (focusTrap) {
+        focusTrapReference.deactivate();
+      }
+    };
 
     this._applyWindowOptions(windowCmptRef.instance, options);
 
@@ -72,8 +90,8 @@ export class NgbModalStack {
   }
 
   private _getContentRef(
-      moduleCFR: ComponentFactoryResolver, contentInjector: Injector, content: any,
-      context: NgbActiveModal): ContentRef {
+    moduleCFR: ComponentFactoryResolver, contentInjector: Injector, content: any,
+    context: NgbActiveModal): ContentRef {
     if (!content) {
       return new ContentRef([]);
     } else if (content instanceof TemplateRef) {
@@ -85,7 +103,7 @@ export class NgbModalStack {
     } else {
       const contentCmptFactory = moduleCFR.resolveComponentFactory(content);
       const modalContentInjector =
-          ReflectiveInjector.resolveAndCreate([{provide: NgbActiveModal, useValue: context}], contentInjector);
+        ReflectiveInjector.resolveAndCreate([{ provide: NgbActiveModal, useValue: context }], contentInjector);
       const componentRef = contentCmptFactory.create(modalContentInjector);
       this._applicationRef.attachView(componentRef.hostView);
       return new ContentRef([[componentRef.location.nativeElement]], componentRef.hostView, componentRef);

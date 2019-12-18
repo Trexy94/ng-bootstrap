@@ -1,12 +1,12 @@
-import {Component, Input, TemplateRef, Output, EventEmitter} from '@angular/core';
-import {MonthViewModel, DayViewModel, WeekViewModel} from './datepicker-view-model';
-import {NgbDate} from './ngb-date';
-import {NgbDatepickerI18n} from './datepicker-i18n';
-import {DayTemplateContext} from './datepicker-day-template-context';
+import { Component, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { MonthViewModel, DayViewModel, WeekViewModel } from './datepicker-view-model';
+import { NgbDate } from './ngb-date';
+import { NgbDatepickerI18n } from './datepicker-i18n';
+import { DayTemplateContext } from './datepicker-day-template-context';
 
 @Component({
   selector: 'ngb-datepicker-month-view',
-  host: {'class': 'd-block'},
+  host: { 'class': 'd-block' },
   styles: [`
     .ngb-dp-weekday, .ngb-dp-week-number {
       line-height: 2rem;
@@ -32,7 +32,8 @@ import {DayTemplateContext} from './datepicker-day-template-context';
     <template ngFor let-week [ngForOf]="month.weeks">
       <div *ngIf="!isCollapsed(week)" class="ngb-dp-week d-flex">
         <div *ngIf="showWeekNumbers" class="ngb-dp-week-number small text-center font-italic text-muted">{{ week.number }}</div>
-        <div *ngFor="let day of week.days" (click)="doSelect(day)" tabindex="0" role="button" (keyup.enter)="doSelect(day)" class="ngb-dp-day"
+        <div *ngFor="let day of week.days" (click)="doSelect(day)" 
+        tabindex="0" role="button" (keyup.enter)="doSelect(day)" class="ngb-dp-day"
          [class.disabled]="isDisabled(day)"
          [class.hidden]="isHidden(day)">
           <template [ngIf]="!isHidden(day)">
@@ -59,7 +60,7 @@ export class NgbDatepickerMonthView {
 
   @Output() select = new EventEmitter<NgbDate>();
 
-  constructor(public i18n: NgbDatepickerI18n) {}
+  constructor(public i18n: NgbDatepickerI18n) { }
 
   doSelect(day: DayViewModel) {
     if (!this.isDisabled(day) && !this.isHidden(day)) {
@@ -73,7 +74,7 @@ export class NgbDatepickerMonthView {
 
   isCollapsed(week: WeekViewModel) {
     return this.outsideDays === 'collapsed' && week.days[0].date.month !== this.month.number &&
-        week.days[week.days.length - 1].date.month !== this.month.number;
+      week.days[week.days.length - 1].date.month !== this.month.number;
   }
 
   isHidden(day: DayViewModel) {
