@@ -20,7 +20,7 @@ import {NgbPaginationConfig} from './pagination-config';
 
       <li *ngIf="directionLinks" class="page-item"
         [class.disabled]="!hasPrevious() || disabled">
-        <a aria-label="Previous" class="page-link" href (click)="!!selectPage(page-1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
+        <a aria-label="Precedente" class="page-link" href (click)="!!selectPage(page-1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -33,7 +33,7 @@ import {NgbPaginationConfig} from './pagination-config';
         </a>
       </li>
       <li *ngIf="directionLinks" class="page-item" [class.disabled]="!hasNext() || disabled">
-        <a aria-label="Next" class="page-link" href (click)="!!selectPage(page+1)" [attr.tabindex]="(hasNext() ? null : '-1')">
+        <a aria-label="Successivo" class="page-link" href (click)="!!selectPage(page+1)" [attr.tabindex]="(hasNext() ? null : '-1')">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

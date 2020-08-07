@@ -26,7 +26,8 @@ export interface ResultTemplateContext {
       <ngb-highlight [result]="formatter(result)" [term]="term"></ngb-highlight>
     </template>
     <template ngFor [ngForOf]="results" let-result let-idx="index">
-      <button type="button" class="dropdown-item" role="option"
+      <button type="button" class="dropdown-item" role="option" tabindex="0"
+        (keyup.enter)="select(result)"
         [id]="id + '-' + idx"
         [class.active]="idx === activeIdx"
         (mouseenter)="markActive(idx)"

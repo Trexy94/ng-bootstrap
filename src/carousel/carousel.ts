@@ -52,11 +52,11 @@ export class NgbSlide {
     </div>
     <a class="left carousel-control-prev" role="button" (click)="cycleToPrev()">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
+      <span class="sr-only">Precedente</span>
     </a>
     <a class="right carousel-control-next" role="button" (click)="cycleToNext()">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
+      <span class="sr-only">Successivo</span>
     </a>
     `
 })

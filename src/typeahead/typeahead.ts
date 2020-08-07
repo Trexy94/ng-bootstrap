@@ -216,7 +216,6 @@ export class NgbTypeahead implements ControlValueAccessor,
           this._showHint();
           break;
         case Key.Enter:
-        case Key.Tab:
           const result = this._windowRef.instance.getActive();
           if (isDefined(result)) {
             event.preventDefault();

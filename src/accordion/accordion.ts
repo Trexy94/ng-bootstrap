@@ -99,8 +99,8 @@ export interface NgbPanelChangeEvent {
     <template ngFor let-panel [ngForOf]="panels">
       <div role="tab" id="{{panel.id}}-header"
         [class]="'card-header ' + (panel.type ? 'card-'+panel.type: type ? 'card-'+type : '')" [class.active]="isOpen(panel.id)">
-        <div (click)="!!toggle(panel.id)" role="region" class="card-title" 
-          [class.text-muted]="panel.disabled" [attr.tabindex]="(panel.disabled ? '-1' : null)"
+        <div (click)="!!toggle(panel.id)" (keyup.enter)="!!toggle(panel.id)" role="button" class="card-title" 
+          [class.text-muted]="panel.disabled" [attr.tabindex]="(panel.disabled ? '-1' : 0)"
           [attr.aria-expanded]="isOpen(panel.id)" [attr.aria-controls]="(isOpen(panel.id) ? panel.id : null)"
           [attr.aria-disabled]="panel.disabled">
           {{panel.title}}<template [ngTemplateOutlet]="panel.titleTpl?.templateRef"></template>
