@@ -7,23 +7,25 @@ import {
   Input,
   OnDestroy,
   AfterContentChecked,
-  OnInit
+  OnInit,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
-import {NgbCarouselConfig} from './carousel-config';
+import { NgbCarouselConfig } from './carousel-config';
 
 let nextId = 0;
 
 /**
  * Represents an individual slide to be used within a carousel.
  */
-@Directive({selector: 'template[ngbSlide]'})
+@Directive({ selector: 'template[ngbSlide]' })
 export class NgbSlide {
   /**
    * Unique slide identifier. Must be unique for the entire document for proper accessibility support.
    * Will be auto-generated if not provided.
    */
   @Input() id = `ngb-slide-${nextId++}`;
-  constructor(public tplRef: TemplateRef<any>) {}
+  constructor(public tplRef: TemplateRef<any>) { }
 }
 
 /**
@@ -43,9 +45,14 @@ export class NgbSlide {
   },
   template: `
     <ol class="carousel-indicators">
-      <li *ngFor="let slide of slides" [id]="slide.id" [class.active]="slide.id === activeId" (click)="cycleToSelected(slide.id)"></li>
+      <li *ngFor="let slide of slides; let i = index" 
+      [id]="slide.id" [attr.aria-label]="'Seleziona slide numero' + i"
+       [class.active]="slide.id === activeId" tabindex=0 (click)="cycleToSelected(slide.id)"
+       (keyup.enter)="cycleToSelected(slide.id)" (keyup.Space)="cycleToSelected(slide.id)">
+      <span class="sr-only">{{composeMessage(slide.id)}} <span *ngIf="slide.id === activeId">(Corrente)</span></span>
+      </li>
     </ol>
-    <div class="carousel-inner">
+    <div class="carousel-inner" #carouselInner (focusout)="cycle(true)">
       <div *ngFor="let slide of slides" class="carousel-item" [class.active]="slide.id === activeId">
         <template [ngTemplateOutlet]="slide.tplRef"></template>
       </div>
@@ -61,9 +68,11 @@ export class NgbSlide {
     `
 })
 export class NgbCarousel implements AfterContentChecked,
-    OnDestroy, OnInit {
+  OnDestroy, OnInit {
   @ContentChildren(NgbSlide) slides: QueryList<NgbSlide>;
   private _slideChangeInterval;
+
+  private forcePause: boolean = false;
 
   /**
    * Amount of time in milliseconds before next slide is shown.
@@ -85,6 +94,9 @@ export class NgbCarousel implements AfterContentChecked,
    */
   @Input() activeId: string;
 
+  @ViewChild('carouselInner')
+  public carouselReference: ElementRef;
+
   constructor(config: NgbCarouselConfig) {
     this.interval = config.interval;
     this.wrap = config.wrap;
@@ -96,9 +108,24 @@ export class NgbCarousel implements AfterContentChecked,
     this.activeId = activeSlide ? activeSlide.id : (this.slides.length ? this.slides.first.id : null);
   }
 
-  ngOnInit() { this._startTimer(); }
+  ngOnInit() {
+    this._startTimer();
+    (this.carouselReference.nativeElement as HTMLDivElement).addEventListener('focusin', () => {
+      this.forcePause = true;
+      this.pause();
+    }, true);
+  }
 
-  ngOnDestroy() { clearInterval(this._slideChangeInterval); }
+  ngOnDestroy() {
+    clearInterval(this._slideChangeInterval);
+    (this.carouselReference.nativeElement as HTMLDivElement).removeEventListener('focusin', this.pause, true);
+  }
+
+  composeMessage(id: string): string {
+    const index = this._getSlideIdxById(id);
+    const length = this.slides.length;
+    return 'Slide ' + (index + 1) + ' di ' + length;
+  }
 
   /**
    * Navigate to a slide with the specified identifier.
@@ -132,7 +159,7 @@ export class NgbCarousel implements AfterContentChecked,
   /**
    * Restarts cycling through the carousel slides from left to right.
    */
-  cycle() { this._startTimer(); }
+  cycle(restart: boolean) { if (restart) { this.forcePause = false; this._startTimer(); } }
 
   cycleToNext() { this.cycleToSelected(this._getNextSlide(this.activeId)); }
 
@@ -163,8 +190,11 @@ export class NgbCarousel implements AfterContentChecked,
   }
 
   private _startTimer() {
+    if (this._slideChangeInterval) {
+      clearInterval(this._slideChangeInterval);
+    }
     if (this.interval > 0) {
-      this._slideChangeInterval = setInterval(() => { this.cycleToNext(); }, this.interval);
+      this._slideChangeInterval = setInterval(() => { if (!this.forcePause) { this.cycleToNext(); } }, this.interval);
     }
   }
 
@@ -185,7 +215,7 @@ export class NgbCarousel implements AfterContentChecked,
     const isLastSlide = currentSlideIdx === slideArr.length - 1;
 
     return isLastSlide ? (this.wrap ? slideArr[0].id : slideArr[slideArr.length - 1].id) :
-                         slideArr[currentSlideIdx + 1].id;
+      slideArr[currentSlideIdx + 1].id;
   }
 
   private _getPrevSlide(currentSlideId: string): string {
@@ -194,7 +224,7 @@ export class NgbCarousel implements AfterContentChecked,
     const isFirstSlide = currentSlideIdx === 0;
 
     return isFirstSlide ? (this.wrap ? slideArr[slideArr.length - 1].id : slideArr[0].id) :
-                          slideArr[currentSlideIdx - 1].id;
+      slideArr[currentSlideIdx - 1].id;
   }
 }
 

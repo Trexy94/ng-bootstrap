@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output, OnChanges, ChangeDetectionStrategy, SimpleChanges} from '@angular/core';
-import {getValueInRange, isNumber} from '../util/util';
-import {NgbPaginationConfig} from './pagination-config';
+import { Component, EventEmitter, Input, Output, OnChanges, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
+import { getValueInRange, isNumber } from '../util/util';
+import { NgbPaginationConfig } from './pagination-config';
 
 /**
  * A directive that will take care of visualising a pagination bar and enable / disable buttons correctly!
@@ -8,13 +8,14 @@ import {NgbPaginationConfig} from './pagination-config';
 @Component({
   selector: 'ngb-pagination',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'role': 'navigation'},
+  host: { 'role': 'navigation' },
   template: `
     <ul [class]="'pagination' + (size ? ' pagination-' + size : '')">
       <li *ngIf="boundaryLinks" class="page-item"
         [class.disabled]="!hasPrevious() || disabled">
-        <a aria-label="First" class="page-link" href (click)="!!selectPage(1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
+        <a aria-label="Primo" class="page-link" href (click)="!!selectPage(1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
           <span aria-hidden="true">&laquo;&laquo;</span>
+          <span *ngIf="!hasPrevious() || disabled" class="sr-only">disabilitato</span>
         </a>
       </li>
 
@@ -22,6 +23,7 @@ import {NgbPaginationConfig} from './pagination-config';
         [class.disabled]="!hasPrevious() || disabled">
         <a aria-label="Precedente" class="page-link" href (click)="!!selectPage(page-1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
           <span aria-hidden="true">&laquo;</span>
+          <span *ngIf="!hasPrevious() || disabled" class="sr-only">disabilitato</span>
         </a>
       </li>
       <li *ngFor="let pageNumber of pages" class="page-item" [class.active]="pageNumber === page"
@@ -29,18 +31,20 @@ import {NgbPaginationConfig} from './pagination-config';
         <a *ngIf="isEllipsis(pageNumber)" class="page-link">...</a>
         <a *ngIf="!isEllipsis(pageNumber)" class="page-link" href (click)="!!selectPage(pageNumber)">
           {{pageNumber}}
-          <span *ngIf="pageNumber === page" class="sr-only">(current)</span>
+          <span *ngIf="pageNumber === page" class="sr-only">(corrente)</span>
         </a>
       </li>
       <li *ngIf="directionLinks" class="page-item" [class.disabled]="!hasNext() || disabled">
         <a aria-label="Successivo" class="page-link" href (click)="!!selectPage(page+1)" [attr.tabindex]="(hasNext() ? null : '-1')">
           <span aria-hidden="true">&raquo;</span>
+          <span *ngIf="!hasNext() || disabled" class="sr-only">disabilitato</span>
         </a>
       </li>
 
       <li *ngIf="boundaryLinks" class="page-item" [class.disabled]="!hasNext() || disabled">
-        <a aria-label="Last" class="page-link" href (click)="!!selectPage(pageCount)" [attr.tabindex]="(hasNext() ? null : '-1')">
+        <a aria-label="Ultimo" class="page-link" href (click)="!!selectPage(pageCount)" [attr.tabindex]="(hasNext() ? null : '-1')">
           <span aria-hidden="true">&raquo;&raquo;</span>
+          <span *ngIf="!hasNext() || disabled" class="sr-only">disabilitato</span>
         </a>
       </li>
     </ul>

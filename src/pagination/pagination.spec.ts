@@ -22,7 +22,7 @@ function expectPages(nativeEl: HTMLElement, pagesDef: string[]): void {
     if (classIndicator === '+') {
       expect(pages[i]).toHaveCssClass('active');
       expect(pages[i]).not.toHaveCssClass('disabled');
-      expect(normalizeText(pages[i].textContent)).toEqual(pageDef.substr(1) + ' (current)');
+      expect(normalizeText(pages[i].textContent)).toEqual(pageDef.substr(1) + ' (corrente)');
     } else if (classIndicator === '-') {
       expect(pages[i]).not.toHaveCssClass('active');
       expect(pages[i]).toHaveCssClass('disabled');
