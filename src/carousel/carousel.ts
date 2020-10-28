@@ -46,7 +46,7 @@ export class NgbSlide {
   template: `
     <ol class="carousel-indicators">
       <li *ngFor="let slide of slides; let i = index" 
-      [id]="slide.id" [attr.aria-label]="'Seleziona slide numero' + i"
+      [id]="slide.id" [attr.aria-label]="'Seleziona slide numero ' + i"
        [class.active]="slide.id === activeId" tabindex=0 (click)="cycleToSelected(slide.id)"
        (keyup.enter)="cycleToSelected(slide.id)" (keyup.Space)="cycleToSelected(slide.id)">
       <span class="sr-only">{{composeMessage(slide.id)}} <span *ngIf="slide.id === activeId">(Corrente)</span></span>
@@ -159,7 +159,12 @@ export class NgbCarousel implements AfterContentChecked,
   /**
    * Restarts cycling through the carousel slides from left to right.
    */
-  cycle(restart: boolean) { if (restart) { this.forcePause = false; this._startTimer(); } }
+  cycle(restart?: boolean) {
+    if (restart || !this.forcePause) {
+      this.forcePause = false;
+      this._startTimer();
+    }
+  }
 
   cycleToNext() { this.cycleToSelected(this._getNextSlide(this.activeId)); }
 
